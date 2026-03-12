@@ -1,0 +1,672 @@
+<html>
+ <head>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  {% comment %} MonkVee FRESH Quiz Section - Shopify Online Store 2.0 Version: 1.0.0 A premium full-screen quiz funnel for product recommendation and subscription conversion {% endcomment %} {% style %} :root { --mvq-primary: {{ section.settings.primary_color }}; --mvq-primary-rgb: {{ section.settings.primary_color | color_extract: 'red' }}, {{ section.settings.primary_color | color_extract: 'green' }}, {{ section.settings.primary_color | color_extract: 'blue' }}; --mvq-secondary: {{ section.settings.secondary_color }}; --mvq-accent: {{ section.settings.accent_color }}; --mvq-text: {{ section.settings.text_color }}; --mvq-text-muted: {{ section.settings.text_muted_color }}; --mvq-background: {{ section.settings.background_color }}; --mvq-card-bg: {{ section.settings.card_background }}; --mvq-glass-bg: rgba(255, 255, 255, 0.08); --mvq-glass-border: rgba(255, 255, 255, 0.18); --mvq-shadow: 0 8px 32px rgba(0, 0, 0, 0.12); --mvq-shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.15); --mvq-radius: 20px; --mvq-radius-sm: 12px; --mvq-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); --mvq-font-display: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }}; --mvq-font-body: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }}; } .monkvee-quiz-section { position: relative; min-height: 100svh; background: var(--mvq-background); font-family: var(--mvq-font-body); color: var(--mvq-text); overflow: hidden; transition: var(--mvq-transition); } .monkvee-quiz-section.is-collapsed { min-height: auto; height: auto; } .monkvee-quiz-section * { box-sizing: border-box; } /* Background Gradient Orbs */ .mvq-bg-orbs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; } .mvq-bg-orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: mvq-float 20s ease-in-out infinite; } .mvq-bg-orb--1 { width: 600px; height: 600px; background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); top: -200px; right: -150px; animation-delay: 0s; } .mvq-bg-orb--2 { width: 400px; height: 400px; background: linear-gradient(135deg, var(--mvq-secondary), var(--mvq-primary)); bottom: -100px; left: -100px; animation-delay: -7s; } .mvq-bg-orb--3 { width: 300px; height: 300px; background: linear-gradient(135deg, var(--mvq-accent), var(--mvq-secondary)); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s; } @keyframes mvq-float { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(30px, -30px) scale(1.05); } 50% { transform: translate(-20px, 20px) scale(0.95); } 75% { transform: translate(20px, 30px) scale(1.02); } } /* Main Container */ .mvq-container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 24px; min-height: 100svh; display: flex; flex-direction: column; } .is-collapsed .mvq-container { min-height: auto; } /* Header */ .mvq-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; margin-bottom: 24px; } .mvq-back-btn { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); border-radius: 100px; color: var(--mvq-text); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--mvq-transition); cursor: pointer; } .mvq-back-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateX(-4px); } .mvq-back-btn svg { width: 18px; height: 18px; transition: transform 0.3s ease; } .mvq-back-btn:hover svg { transform: translateX(-3px); } .mvq-logo { font-family: var(--mvq-font-display); font-size: 28px; font-weight: 700; color: var(--mvq-text); letter-spacing: -0.5px; } .mvq-logo-accent { color: var(--mvq-primary); } /* Progress Bar */ .mvq-progress-wrapper { margin-bottom: 32px; } .mvq-progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: var(--mvq-text-muted); } .mvq-progress-step { font-weight: 600; color: var(--mvq-text); } .mvq-progress-bar { height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 100px; overflow: hidden; } .mvq-progress-fill { height: 100%; background: linear-gradient(90deg, var(--mvq-primary), var(--mvq-accent)); border-radius: 100px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 0 20px rgba(var(--mvq-primary-rgb), 0.5); } /* Quiz Content Area */ .mvq-quiz-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 0; } /* Quiz Step */ .mvq-step { display: none; opacity: 0; transform: translateY(30px); animation: mvq-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; } .mvq-step.is-active { display: block; } @keyframes mvq-fade-in { to { opacity: 1; transform: translateY(0); } } .mvq-step-exit { animation: mvq-fade-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; } @keyframes mvq-fade-out { to { opacity: 0; transform: translateY(-30px); } } /* Question Styling */ .mvq-question { text-align: center; margin-bottom: 48px; } .mvq-question-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.2), rgba(var(--mvq-primary-rgb), 0.1)); border: 1px solid rgba(var(--mvq-primary-rgb), 0.3); border-radius: 100px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--mvq-primary); margin-bottom: 20px; } .mvq-question-title { font-family: var(--mvq-font-display); font-size: clamp(28px, 5vw, 44px); font-weight: 700; line-height: 1.2; margin: 0 0 16px; letter-spacing: -1px; } .mvq-question-subtitle { font-size: 17px; color: var(--mvq-text-muted); max-width: 500px; margin: 0 auto; line-height: 1.6; } /* Options Grid */ .mvq-options { display: grid; gap: 16px; max-width: 900px; margin: 0 auto; } .mvq-options--goals { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } .mvq-options--household { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); max-width: 700px; } .mvq-options--usage { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); max-width: 800px; } /* Option Card */ .mvq-option { position: relative; display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 2px solid var(--mvq-glass-border); border-radius: var(--mvq-radius); cursor: pointer; transition: var(--mvq-transition); overflow: hidden; } .mvq-option::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.1), transparent); opacity: 0; transition: opacity 0.3s ease; } .mvq-option:hover { border-color: rgba(var(--mvq-primary-rgb), 0.4); transform: translateY(-4px); box-shadow: var(--mvq-shadow); } .mvq-option:hover::before { opacity: 1; } .mvq-option.is-selected { border-color: var(--mvq-primary); background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.15), rgba(var(--mvq-primary-rgb), 0.05)); box-shadow: 0 0 30px rgba(var(--mvq-primary-rgb), 0.3); } .mvq-option.is-selected::before { opacity: 1; } .mvq-option-icon { flex-shrink: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border-radius: 14px; color: white; box-shadow: 0 8px 20px rgba(var(--mvq-primary-rgb), 0.3); } .mvq-option-icon svg { width: 26px; height: 26px; } .mvq-option-content { flex: 1; text-align: left; } .mvq-option-title { font-family: var(--mvq-font-display); font-size: 17px; font-weight: 600; margin: 0 0 4px; } .mvq-option-desc { font-size: 13px; color: var(--mvq-text-muted); margin: 0; line-height: 1.4; } .mvq-option-check { position: absolute; top: 12px; right: 12px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--mvq-primary); border-radius: 50%; color: white; opacity: 0; transform: scale(0); transition: var(--mvq-transition); } .mvq-option-check svg { width: 14px; height: 14px; } .mvq-option.is-selected .mvq-option-check { opacity: 1; transform: scale(1); } /* Household Number Options */ .mvq-option--number { flex-direction: column; text-align: center; padding: 28px 20px; gap: 8px; } .mvq-option--number .mvq-option-icon { width: 64px; height: 64px; border-radius: 50%; font-family: var(--mvq-font-display); font-size: 24px; font-weight: 700; background: var(--mvq-glass-bg); border: 2px solid var(--mvq-glass-border); color: var(--mvq-text); box-shadow: none; transition: var(--mvq-transition); } .mvq-option--number.is-selected .mvq-option-icon { background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border-color: transparent; color: white; box-shadow: 0 8px 20px rgba(var(--mvq-primary-rgb), 0.4); } .mvq-option--number .mvq-option-content { text-align: center; } /* Navigation Buttons */ .mvq-nav { display: flex; justify-content: center; gap: 16px; margin-top: 48px; } .mvq-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 18px 36px; font-family: var(--mvq-font-body); font-size: 16px; font-weight: 600; border-radius: 100px; border: none; cursor: pointer; transition: var(--mvq-transition); text-decoration: none; } .mvq-btn svg { width: 20px; height: 20px; transition: transform 0.3s ease; } .mvq-btn--primary { background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); color: white; box-shadow: 0 8px 30px rgba(var(--mvq-primary-rgb), 0.4); } .mvq-btn--primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(var(--mvq-primary-rgb), 0.5); } .mvq-btn--primary:hover svg { transform: translateX(4px); } .mvq-btn--primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; } .mvq-btn--secondary { background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); color: var(--mvq-text); } .mvq-btn--secondary:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); } .mvq-btn--secondary:hover svg { transform: translateX(-4px); } /* ===================== RESULTS PAGE ===================== */ .mvq-results { display: none; opacity: 0; animation: mvq-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } .mvq-results.is-active { display: block; } .mvq-results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; max-width: 1300px; margin: 0 auto; } /* Product Media Column */ .mvq-product-media { position: sticky; top: 100px; } .mvq-product-image-wrapper { position: relative; background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.1), rgba(var(--mvq-primary-rgb), 0.02)); border-radius: var(--mvq-radius); padding: 40px; overflow: hidden; } .mvq-product-image-wrapper::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(var(--mvq-primary-rgb), 0.3), transparent 70%); filter: blur(60px); pointer-events: none; } .mvq-product-image { position: relative; z-index: 1; width: 100%; max-width: 400px; margin: 0 auto; display: block; border-radius: var(--mvq-radius-sm); transition: transform 0.5s ease; } .mvq-product-image:hover { transform: scale(1.03); } .mvq-product-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; position: relative; z-index: 1; } .mvq-badge { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--mvq-text); transition: var(--mvq-transition); } .mvq-badge:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); } .mvq-badge svg { width: 16px; height: 16px; color: var(--mvq-primary); } /* Product Info Column */ .mvq-product-info { padding: 20px 0; } .mvq-result-header { margin-bottom: 32px; } .mvq-result-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.2), rgba(var(--mvq-primary-rgb), 0.05)); border: 1px solid rgba(var(--mvq-primary-rgb), 0.3); border-radius: 100px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--mvq-primary); margin-bottom: 20px; } .mvq-result-badge svg { width: 16px; height: 16px; } .mvq-product-title { font-family: var(--mvq-font-display); font-size: clamp(32px, 4vw, 48px); font-weight: 700; line-height: 1.1; margin: 0 0 12px; letter-spacing: -1px; } .mvq-product-subtitle { font-size: 18px; color: var(--mvq-text-muted); margin: 0; line-height: 1.5; } /* Personalized Plan Card */ .mvq-plan-card { background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); border-radius: var(--mvq-radius); padding: 28px; margin-bottom: 24px; } .mvq-plan-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; } .mvq-plan-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border-radius: 12px; color: white; } .mvq-plan-icon svg { width: 22px; height: 22px; } .mvq-plan-title { font-family: var(--mvq-font-display); font-size: 18px; font-weight: 700; margin: 0; } .mvq-plan-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } .mvq-plan-stat { text-align: center; padding: 16px; background: rgba(255, 255, 255, 0.03); border-radius: var(--mvq-radius-sm); } .mvq-plan-stat-value { font-family: var(--mvq-font-display); font-size: 28px; font-weight: 700; color: var(--mvq-primary); line-height: 1; margin-bottom: 6px; } .mvq-plan-stat-label { font-size: 12px; color: var(--mvq-text-muted); text-transform: uppercase; letter-spacing: 0.5px; } /* Quantity Selector */ .mvq-quantity-section { margin-bottom: 24px; } .mvq-quantity-label { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; } .mvq-quantity-label svg { width: 18px; height: 18px; color: var(--mvq-primary); } .mvq-quantity-control { display: flex; align-items: center; gap: 4px; background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); border-radius: var(--mvq-radius-sm); padding: 6px; width: fit-content; } .mvq-qty-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; border-radius: 10px; color: var(--mvq-text); cursor: pointer; transition: var(--mvq-transition); } .mvq-qty-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--mvq-primary); } .mvq-qty-btn:disabled { opacity: 0.3; cursor: not-allowed; } .mvq-qty-btn svg { width: 20px; height: 20px; } .mvq-qty-value { min-width: 60px; text-align: center; font-family: var(--mvq-font-display); font-size: 24px; font-weight: 700; color: var(--mvq-text); background: transparent; border: none; -moz-appearance: textfield; } .mvq-qty-value::-webkit-outer-spin-button, .mvq-qty-value::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; } /* Pricing Display */ .mvq-pricing { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; } .mvq-price-current { font-family: var(--mvq-font-display); font-size: 42px; font-weight: 700; color: var(--mvq-text); } .mvq-price-per-day { font-size: 15px; color: var(--mvq-text-muted); padding: 6px 12px; background: rgba(var(--mvq-primary-rgb), 0.1); border-radius: 100px; } .mvq-price-per-day strong { color: var(--mvq-primary); } /* Delivery Estimate */ .mvq-delivery { display: flex; align-items: center; gap: 10px; padding: 16px 20px; background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: var(--mvq-radius-sm); margin-bottom: 24px; font-size: 14px; color: #4CAF50; } .mvq-delivery svg { width: 20px; height: 20px; flex-shrink: 0; } .mvq-delivery strong { font-weight: 700; } /* FRESH Program Banner */ .mvq-fresh-banner { position: relative; background: linear-gradient(135deg, rgba(var(--mvq-primary-rgb), 0.15), rgba(var(--mvq-primary-rgb), 0.05)); border: 1px solid rgba(var(--mvq-primary-rgb), 0.3); border-radius: var(--mvq-radius); padding: 24px; margin-bottom: 28px; overflow: hidden; } .mvq-fresh-banner::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(var(--mvq-primary-rgb), 0.3), transparent 70%); pointer-events: none; } .mvq-fresh-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; position: relative; } .mvq-fresh-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border-radius: 10px; color: white; } .mvq-fresh-icon svg { width: 20px; height: 20px; } .mvq-fresh-title { font-family: var(--mvq-font-display); font-size: 16px; font-weight: 700; margin: 0; } .mvq-fresh-desc { font-size: 14px; color: var(--mvq-text-muted); margin: 0 0 16px; line-height: 1.5; position: relative; } .mvq-fresh-progress { display: flex; gap: 6px; margin-bottom: 12px; position: relative; } .mvq-fresh-dot { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid var(--mvq-glass-border); font-size: 10px; font-weight: 700; color: var(--mvq-text-muted); transition: var(--mvq-transition); } .mvq-fresh-dot.is-active { background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border-color: transparent; color: white; box-shadow: 0 4px 12px rgba(var(--mvq-primary-rgb), 0.4); } .mvq-fresh-reward { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--mvq-primary); position: relative; } .mvq-fresh-reward svg { width: 18px; height: 18px; } /* Product Form Container */ .mvq-form-wrapper { background: var(--mvq-glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--mvq-glass-border); border-radius: var(--mvq-radius); padding: 24px; } .mvq-form-wrapper .shopify-product-form, .mvq-form-wrapper product-form, .mvq-form-wrapper form[action*="/cart/add"] { margin: 0; } /* Style native Shopify form elements within this section */ .mvq-form-wrapper .product-form__input { margin-bottom: 16px; } .mvq-form-wrapper select, .mvq-form-wrapper .product-form__input select { width: 100%; padding: 14px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--mvq-glass-border); border-radius: var(--mvq-radius-sm); color: var(--mvq-text); font-size: 15px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 40px; } .mvq-form-wrapper select:focus { outline: none; border-color: var(--mvq-primary); } .mvq-form-wrapper label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: var(--mvq-text); } /* Subscription App Block Container */ .mvq-subscription-widget { margin: 20px 0; padding: 16px; background: rgba(255, 255, 255, 0.03); border-radius: var(--mvq-radius-sm); } .mvq-subscription-widget:empty { display: none; } /* Style common subscription app elements */ .mvq-subscription-widget [data-subscription-widget], .mvq-subscription-widget .subscription-widget, .mvq-subscription-widget .rc-widget, .mvq-subscription-widget .bold-subscriptions { font-family: var(--mvq-font-body); } /* App Block Placeholder */ .mvq-app-block { margin: 16px 0; min-height: 60px; } /* Add to Cart Button */ .mvq-add-to-cart { width: 100%; padding: 20px 32px; background: linear-gradient(135deg, var(--mvq-primary), var(--mvq-accent)); border: none; border-radius: var(--mvq-radius-sm); font-family: var(--mvq-font-body); font-size: 17px; font-weight: 700; color: white; cursor: pointer; transition: var(--mvq-transition); display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 8px 30px rgba(var(--mvq-primary-rgb), 0.4); margin-top: 16px; } .mvq-add-to-cart:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(var(--mvq-primary-rgb), 0.5); } .mvq-add-to-cart:disabled { opacity: 0.6; cursor: not-allowed; transform: none; } .mvq-add-to-cart svg { width: 22px; height: 22px; } /* Guarantees */ .mvq-guarantees { display: flex; justify-content: center; gap: 24px; margin-top: 20px; flex-wrap: wrap; } .mvq-guarantee { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--mvq-text-muted); } .mvq-guarantee svg { width: 18px; height: 18px; color: var(--mvq-primary); } /* ===================== MOBILE RESPONSIVE ===================== */ @media (max-width: 1024px) { .mvq-results-grid { grid-template-columns: 1fr; gap: 32px; } .mvq-product-media { position: relative; top: 0; } .mvq-product-image-wrapper { padding: 30px; } } @media (max-width: 768px) { .mvq-container { padding: 16px; } .mvq-header { margin-bottom: 16px; } .mvq-back-btn { padding: 10px 16px; font-size: 13px; } .mvq-logo { font-size: 22px; } .mvq-progress-wrapper { margin-bottom: 24px; } .mvq-question { margin-bottom: 32px; } .mvq-question-title { font-size: 26px; } .mvq-question-subtitle { font-size: 15px; } .mvq-options { gap: 12px; } .mvq-options--goals, .mvq-options--household, .mvq-options--usage { grid-template-columns: 1fr; max-width: 100%; } .mvq-option { padding: 18px; gap: 14px; } .mvq-option-icon { width: 46px; height: 46px; border-radius: 12px; } .mvq-option-icon svg { width: 22px; height: 22px; } .mvq-option--number { padding: 20px 16px; } .mvq-option--number .mvq-option-icon { width: 56px; height: 56px; font-size: 20px; } .mvq-nav { flex-direction: column; margin-top: 32px; } .mvq-btn { width: 100%; padding: 16px 28px; } .mvq-product-image-wrapper { padding: 24px; } .mvq-product-title { font-size: 28px; } .mvq-plan-details { grid-template-columns: 1fr; gap: 12px; } .mvq-plan-stat { padding: 14px; } .mvq-plan-stat-value { font-size: 24px; } .mvq-pricing { flex-direction: column; gap: 8px; align-items: flex-start; } .mvq-price-current { font-size: 36px; } .mvq-fresh-progress { flex-wrap: wrap; } .mvq-fresh-dot { width: 20px; height: 20px; font-size: 9px; } .mvq-guarantees { flex-direction: column; gap: 12px; align-items: flex-start; } .mvq-product-badges { gap: 8px; } .mvq-badge { padding: 8px 12px; font-size: 11px; } } @media (max-width: 480px) { .mvq-question-badge { font-size: 10px; padding: 6px 12px; } .mvq-result-badge { font-size: 10px; padding: 8px 14px; } .mvq-plan-card { padding: 20px; } .mvq-fresh-banner { padding: 20px; } .mvq-form-wrapper { padding: 20px; } } /* Loading State */ .mvq-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; min-height: 300px; } .mvq-spinner { width: 48px; height: 48px; border: 3px solid var(--mvq-glass-border); border-top-color: var(--mvq-primary); border-radius: 50%; animation: mvq-spin 1s linear infinite; } @keyframes mvq-spin { to { transform: rotate(360deg); } } .mvq-loading-text { font-size: 16px; color: var(--mvq-text-muted); animation: mvq-pulse 2s ease-in-out infinite; } @keyframes mvq-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } } /* Scroll indicator */ .mvq-scroll-indicator { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: mvq-fade-in 0.5s 2s forwards; } .mvq-scroll-indicator span { font-size: 12px; color: var(--mvq-text-muted); text-transform: uppercase; letter-spacing: 1px; } .mvq-scroll-indicator svg { width: 24px; height: 24px; color: var(--mvq-text-muted); animation: mvq-bounce 2s infinite; } @keyframes mvq-bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(8px); } 60% { transform: translateY(4px); } } .is-collapsed .mvq-scroll-indicator { display: none; } {% endstyle %} 
+  <section id="monkvee-quiz-{{ section.id }}" class="monkvee-quiz-section" data-section-id="{{ section.id }}" data-servings-per-bottle="{{ section.settings.servings_per_bottle }}" data-product-price="{{ section.settings.product.price | divided_by: 100.0 }}" data-product-id="{{ section.settings.product.id }}" data-variant-id="{{ section.settings.product.selected_or_first_available_variant.id }}"><!-- Background Orbs -->
+   <div class="mvq-bg-orbs" aria-hidden="true">
+    <div class="mvq-bg-orb mvq-bg-orb--1"></div>
+    <div class="mvq-bg-orb mvq-bg-orb--2"></div>
+    <div class="mvq-bg-orb mvq-bg-orb--3"></div>
+   </div>
+   <div class="mvq-container"><!-- Header -->
+    <header class="mvq-header"><a href="{{ section.settings.exit_url }}" class="mvq-back-btn" aria-label="{{ section.settings.exit_button_text }}">
+      <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg><span>{{ section.settings.exit_button_text }}</span> </a>
+     <div class="mvq-logo">
+      {{ section.settings.logo_text_1 }}<span class="mvq-logo-accent">{{ section.settings.logo_text_2 }}</span>
+     </div>
+     <div style="width: 100px;"></div>
+    </header><!-- Progress Bar -->
+    <div class="mvq-progress-wrapper" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3">
+     <div class="mvq-progress-info"><span class="mvq-progress-step">Step <span class="mvq-current-step">1</span> of 3</span> <span class="mvq-progress-percent">33%</span>
+     </div>
+     <div class="mvq-progress-bar">
+      <div class="mvq-progress-fill" style="width: 33%;"></div>
+     </div>
+    </div><!-- Quiz Content -->
+    <div class="mvq-quiz-content"><!-- Step 1: Health Goals -->
+     <div class="mvq-step is-active" data-step="1">
+      <div class="mvq-question">
+       <div class="mvq-question-badge">
+        <svg viewbox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z" /> <path d="M2 17l10 5 10-5" /> <path d="M2 12l10 5 10-5" />
+        </svg> {{ section.settings.step1_badge }}
+       </div>
+       <h2 class="mvq-question-title">{{ section.settings.step1_title }}</h2>
+       <p class="mvq-question-subtitle">{{ section.settings.step1_subtitle }}</p>
+      </div>
+      <div class="mvq-options mvq-options--goals" role="group" aria-label="Select your health priorities">
+       {% for block in section.blocks %} {% if block.type == 'goal_option' %} <button type="button" class="mvq-option" data-goal="{{ block.settings.goal_value }}" aria-pressed="false">
+        <div class="mvq-option-icon">
+         {% case block.settings.goal_icon %} {% when 'skin' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5" /> <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" /> <path d="M12 3v2" /> <path d="M9 6l1 1" /> <path d="M15 6l-1 1" />
+         </svg> {% when 'brain' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 3.5 2 6 5 7.5V22h6v-4.5c3-1.5 5-4 5-7.5a8 8 0 0 0-8-8z" /> <path d="M9 10h.01" /> <path d="M15 10h.01" /> <path d="M9.5 15a3.5 3.5 0 0 0 5 0" />
+         </svg> {% when 'energy' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+         </svg> {% when 'heart' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /> <path d="M12 8v4" /> <path d="M12 16h.01" />
+         </svg> {% when 'weight' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /> <path d="M16.5 7.5L12 12" />
+         </svg> {% when 'family' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3" /> <circle cx="17" cy="7" r="2" /> <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /> <path d="M21 21v-2a3 3 0 0 0-3-3h-1" />
+         </svg> {% when 'sugar' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18" /> <path d="M8 6l2 2" /> <path d="M14 16l2 2" /> <circle cx="6" cy="6" r="3" /> <circle cx="18" cy="18" r="3" />
+         </svg> {% else %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
+         </svg> {% endcase %}
+        </div>
+        <div class="mvq-option-content">
+         <h3 class="mvq-option-title">{{ block.settings.goal_title }}</h3>
+         <p class="mvq-option-desc">{{ block.settings.goal_description }}</p>
+        </div>
+        <div class="mvq-option-check">
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" />
+         </svg>
+        </div></button> {% endif %} {% endfor %}
+      </div>
+      <div class="mvq-nav"><button type="button" class="mvq-btn mvq-btn--primary mvq-next-btn" disabled aria-label="Continue to next step"> <span>{{ section.settings.continue_button_text }}</span>
+        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7" />
+        </svg></button>
+      </div>
+     </div><!-- Step 2: Household Size -->
+     <div class="mvq-step" data-step="2">
+      <div class="mvq-question">
+       <div class="mvq-question-badge">
+        <svg viewbox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <polyline points="9 22 9 12 15 12 15 22" />
+        </svg> {{ section.settings.step2_badge }}
+       </div>
+       <h2 class="mvq-question-title">{{ section.settings.step2_title }}</h2>
+       <p class="mvq-question-subtitle">{{ section.settings.step2_subtitle }}</p>
+      </div>
+      <div class="mvq-options mvq-options--household" role="group" aria-label="Select household size">
+       {% for i in (1..6) %} <button type="button" class="mvq-option mvq-option--number" data-household="{{ i }}" aria-pressed="false">
+        <div class="mvq-option-icon">
+         {{ i }}{% if i == 6 %}+{% endif %}
+        </div>
+        <div class="mvq-option-content">
+         <h3 class="mvq-option-title">{% if i == 1 %}Just Me{% elsif i == 2 %}Couple{% elsif i == 6 %}Large Family{% else %}{{ i }} People{% endif %}</h3>
+        </div>
+        <div class="mvq-option-check">
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" />
+         </svg>
+        </div></button> {% endfor %}
+      </div>
+      <div class="mvq-nav"><button type="button" class="mvq-btn mvq-btn--secondary mvq-prev-btn" aria-label="Go back to previous step">
+        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg><span>Back</span> </button> <button type="button" class="mvq-btn mvq-btn--primary mvq-next-btn" disabled aria-label="Continue to next step"> <span>{{ section.settings.continue_button_text }}</span>
+        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7" />
+        </svg></button>
+      </div>
+     </div><!-- Step 3: Daily Usage -->
+     <div class="mvq-step" data-step="3">
+      <div class="mvq-question">
+       <div class="mvq-question-badge">
+        <svg viewbox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" />
+        </svg> {{ section.settings.step3_badge }}
+       </div>
+       <h2 class="mvq-question-title">{{ section.settings.step3_title }}</h2>
+       <p class="mvq-question-subtitle">{{ section.settings.step3_subtitle }}</p>
+      </div>
+      <div class="mvq-options mvq-options--usage" role="group" aria-label="Select daily usage frequency">
+       {% for block in section.blocks %} {% if block.type == 'usage_option' %} <button type="button" class="mvq-option" data-usage="{{ block.settings.usage_value }}" aria-pressed="false">
+        <div class="mvq-option-icon">
+         {% case block.settings.usage_icon %} {% when 'light' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" /> <circle cx="12" cy="12" r="4" />
+         </svg> {% when 'moderate' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /> <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+         </svg> {% when 'heavy' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="M4.93 4.93l1.41 1.41" /> <path d="M17.66 17.66l1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="M6.34 17.66l-1.41 1.41" /> <path d="M19.07 4.93l-1.41 1.41" />
+         </svg> {% when 'max' %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+         </svg> {% else %} 
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" />
+         </svg> {% endcase %}
+        </div>
+        <div class="mvq-option-content">
+         <h3 class="mvq-option-title">{{ block.settings.usage_title }}</h3>
+         <p class="mvq-option-desc">{{ block.settings.usage_description }}</p>
+        </div>
+        <div class="mvq-option-check">
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" />
+         </svg>
+        </div></button> {% endif %} {% endfor %}
+      </div>
+      <div class="mvq-nav"><button type="button" class="mvq-btn mvq-btn--secondary mvq-prev-btn" aria-label="Go back to previous step">
+        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg><span>Back</span> </button> <button type="button" class="mvq-btn mvq-btn--primary mvq-results-btn" disabled aria-label="See your personalized results"> <span>{{ section.settings.results_button_text }}</span>
+        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /> <polyline points="22 4 12 14.01 9 11.01" />
+        </svg></button>
+      </div>
+     </div><!-- Loading State -->
+     <div class="mvq-step mvq-loading-step" data-step="loading">
+      <div class="mvq-loading">
+       <div class="mvq-spinner"></div>
+       <p class="mvq-loading-text">{{ section.settings.loading_text }}</p>
+      </div>
+     </div><!-- Results -->
+     <div class="mvq-results" data-step="results">
+      <div class="mvq-results-grid"><!-- Product Media Column -->
+       <div class="mvq-product-media">
+        <div class="mvq-product-image-wrapper">
+         {% if section.settings.product.featured_media %} <img class="mvq-product-image" src="{{ section.settings.product.featured_media | image_url: width: 800 }}" alt="{{ section.settings.product.featured_media.alt | default: section.settings.product.title }}" width="400" height="400" loading="lazy"> {% else %} 
+         <div class="mvq-product-image" style="width:100%;height:400px;background:rgba(255,255,255,0.05);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--mvq-text-muted);">
+          <svg width="80" height="80" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /> <circle cx="8.5" cy="8.5" r="1.5" /> <polyline points="21 15 16 10 5 21" />
+          </svg>
+         </div> {% endif %}
+        </div><!-- Product Badges -->
+        <div class="mvq-product-badges">
+         {% for block in section.blocks %} {% if block.type == 'product_badge' %} 
+         <div class="mvq-badge">
+          {% case block.settings.badge_icon %} {% when 'check' %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" />
+          </svg> {% when 'leaf' %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /> <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+          </svg> {% when 'flame' %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+          </svg> {% when 'star' %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg> {% when 'shield' %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> <polyline points="9 12 11 14 15 10" />
+          </svg> {% else %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" />
+          </svg> {% endcase %} <span>{{ block.settings.badge_text }}</span>
+         </div> {% endif %} {% endfor %}
+        </div>
+       </div><!-- Product Info Column -->
+       <div class="mvq-product-info">
+        <div class="mvq-result-header">
+         <div class="mvq-result-badge">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg> {{ section.settings.result_badge_text }}
+         </div>
+         <h1 class="mvq-product-title">{{ section.settings.product.title | default: "Pure Monk Fruit" }}</h1>
+         <p class="mvq-product-subtitle">{{ section.settings.result_subtitle }}</p>
+        </div><!-- Personalized Plan Card -->
+        <div class="mvq-plan-card">
+         <div class="mvq-plan-header">
+          <div class="mvq-plan-icon">
+           <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10" /> <path d="M18 20V4" /> <path d="M6 20v-4" />
+           </svg>
+          </div>
+          <h3 class="mvq-plan-title">{{ section.settings.plan_title }}</h3>
+         </div>
+         <div class="mvq-plan-details">
+          <div class="mvq-plan-stat">
+           <div class="mvq-plan-stat-value" id="mvq-daily-uses">
+            --
+           </div>
+           <div class="mvq-plan-stat-label">
+            Daily Uses
+           </div>
+          </div>
+          <div class="mvq-plan-stat">
+           <div class="mvq-plan-stat-value" id="mvq-bottle-duration">
+            --
+           </div>
+           <div class="mvq-plan-stat-label">
+            Months/Bottle
+           </div>
+          </div>
+          <div class="mvq-plan-stat">
+           <div class="mvq-plan-stat-value" id="mvq-recommended-qty">
+            --
+           </div>
+           <div class="mvq-plan-stat-label">
+            Recommended
+           </div>
+          </div>
+         </div>
+        </div><!-- Quantity Selector -->
+        <div class="mvq-quantity-section"><label class="mvq-quantity-label">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1" /> <circle cx="20" cy="21" r="1" /> <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg> {{ section.settings.quantity_label }} </label>
+         <div class="mvq-quantity-control"><button type="button" class="mvq-qty-btn" id="mvq-qty-minus" aria-label="Decrease quantity">
+           <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" />
+           </svg></button> <input type="number" class="mvq-qty-value" id="mvq-quantity" value="1" min="1" max="12" aria-label="Quantity"> <button type="button" class="mvq-qty-btn" id="mvq-qty-plus" aria-label="Increase quantity">
+           <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19" /> <line x1="5" y1="12" x2="19" y2="12" />
+           </svg></button>
+         </div>
+        </div><!-- Pricing -->
+        <div class="mvq-pricing"><span class="mvq-price-current" id="mvq-total-price"> {{ section.settings.product.price | money }} </span> <span class="mvq-price-per-day"> <strong id="mvq-price-per-day">--</strong> {{ section.settings.per_day_text }} </span>
+        </div><!-- Delivery Estimate -->
+        <div class="mvq-delivery">
+         <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" /> <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /> <circle cx="5.5" cy="18.5" r="2.5" /> <circle cx="18.5" cy="18.5" r="2.5" />
+         </svg><span>{{ section.settings.delivery_text }} <strong id="mvq-delivery-date"></strong></span>
+        </div><!-- FRESH Program Banner -->
+        <div class="mvq-fresh-banner">
+         <div class="mvq-fresh-header">
+          <div class="mvq-fresh-icon">
+           <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /> <path d="M2 17l10 5 10-5" /> <path d="M2 12l10 5 10-5" />
+           </svg>
+          </div>
+          <h4 class="mvq-fresh-title">{{ section.settings.fresh_title }}</h4>
+         </div>
+         <p class="mvq-fresh-desc">{{ section.settings.fresh_description }}</p>
+         <div class="mvq-fresh-progress">
+          {% for i in (1..12) %} 
+          <div class="mvq-fresh-dot {% if i == 1 %}is-active{% endif %}">
+           {{ i }}
+          </div> {% endfor %}
+         </div>
+         <div class="mvq-fresh-reward">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7" /> <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+          </svg> {{ section.settings.fresh_reward_text }}
+         </div>
+        </div><!-- Product Form Container -->
+        <div class="mvq-form-wrapper">
+         
+            {% if section.settings.product != blank %} {%- form 'product', section.settings.product, id: 'mvq-product-form', class: 'mvq-product-form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%} <input type="hidden" name="id" value="{{ section.settings.product.selected_or_first_available_variant.id }}" id="mvq-variant-id"> <input type="hidden" name="quantity" value="1" id="mvq-form-quantity"> {% comment %} Variant selector if product has multiple variants {% endcomment %} {% if section.settings.product.has_only_default_variant == false %} 
+         </div> {% endif %} {% comment %} App Block Container for Subscription Widgets {% endcomment %} 
+         <div class="mvq-subscription-widget">
+          {% comment %} This container is designed to hold subscription app widgets. Compatible apps include: - Recharge Subscriptions - Bold Subscriptions - Seal Subscriptions - Loop Subscriptions - Skio Subscriptions The app's widget will render here automatically if the app is installed and configured for this product. {% endcomment %} {{ block.shopify_attributes }}
+         </div> {% comment %} App Blocks Support {% endcomment %} 
+         <div class="mvq-app-block">
+          {%- for block in section.blocks -%} {%- case block.type -%} {%- when '@app' -%} {% render block %} {%- endcase -%} {%- endfor -%}
+         </div><button type="submit" name="add" class="mvq-add-to-cart" {% unless section.settings.product.available %}disabled{% endunless %}> {% if section.settings.product.available %} 
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1" /> <circle cx="20" cy="21" r="1" /> <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg><span>{{ section.settings.add_to_cart_text }}</span> {% else %} <span>{{ 'products.product.sold_out' | t | default: 'Sold Out' }}</span> {% endif %} </button> {%- endform -%} {% else %} 
+         <p style="text-align:center;color:var(--mvq-text-muted);padding:20px;">Please select a product in the section settings.</p> {% endif %}
+        </div><!-- Guarantees -->
+        <div class="mvq-guarantees">
+         <div class="mvq-guarantee">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg><span>{{ section.settings.guarantee_1 }}</span>
+         </div>
+         <div class="mvq-guarantee">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" /> <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /> <circle cx="5.5" cy="18.5" r="2.5" /> <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg><span>{{ section.settings.guarantee_2 }}</span>
+         </div>
+         <div class="mvq-guarantee">
+          <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+          </svg><span>{{ section.settings.guarantee_3 }}</span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Scroll Indicator (only on results) -->
+    <div class="mvq-scroll-indicator" style="display:none;"><span>Scroll for more</span>
+     <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7" />
+     </svg>
+    </div>
+   </div>
+  </section>
+  <script>
+(function() {
+  'use strict';
+
+  const section = document.getElementById('monkvee-quiz-{{ section.id }}');
+  if (!section) return;
+
+  // Configuration
+  const SERVINGS_PER_BOTTLE = parseInt(section.dataset.servingsPerBottle) || 283;
+  const PRODUCT_PRICE = parseFloat(section.dataset.productPrice) || 29.99;
+  const VARIANT_ID = section.dataset.variantId;
+
+  // State
+  const state = {
+    currentStep: 1,
+    totalSteps: 3,
+    selectedGoals: [],
+    householdSize: 0,
+    usagePerPerson: 0,
+    quantity: 1,
+    isAnimating: false
+  };
+
+  // DOM Elements
+  const elements = {
+    steps: section.querySelectorAll('.mvq-step'),
+    results: section.querySelector('.mvq-results'),
+    progressFill: section.querySelector('.mvq-progress-fill'),
+    progressStep: section.querySelector('.mvq-current-step'),
+    progressPercent: section.querySelector('.mvq-progress-percent'),
+    goalOptions: section.querySelectorAll('[data-goal]'),
+    householdOptions: section.querySelectorAll('[data-household]'),
+    usageOptions: section.querySelectorAll('[data-usage]'),
+    nextBtns: section.querySelectorAll('.mvq-next-btn'),
+    prevBtns: section.querySelectorAll('.mvq-prev-btn'),
+    resultsBtn: section.querySelector('.mvq-results-btn'),
+    quantityInput: section.querySelector('#mvq-quantity'),
+    qtyMinus: section.querySelector('#mvq-qty-minus'),
+    qtyPlus: section.querySelector('#mvq-qty-plus'),
+    dailyUses: section.querySelector('#mvq-daily-uses'),
+    bottleDuration: section.querySelector('#mvq-bottle-duration'),
+    recommendedQty: section.querySelector('#mvq-recommended-qty'),
+    totalPrice: section.querySelector('#mvq-total-price'),
+    pricePerDay: section.querySelector('#mvq-price-per-day'),
+    deliveryDate: section.querySelector('#mvq-delivery-date'),
+    formQuantity: section.querySelector('#mvq-form-quantity'),
+    variantId: section.querySelector('#mvq-variant-id'),
+    variantSelect: section.querySelector('#mvq-variant-select'),
+    scrollIndicator: section.querySelector('.mvq-scroll-indicator')
+  };
+
+  // Utility Functions
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: '{{ shop.currency | default: "USD" }}'
+    }).format(amount);
+  }
+
+  function getDeliveryDateRange() {
+    const today = new Date();
+    const minDate = new Date(today);
+    const maxDate = new Date(today);
+    minDate.setDate(today.getDate() + 2);
+    maxDate.setDate(today.getDate() + 7);
+    
+    const options = { month: 'short', day: 'numeric' };
+    return `${minDate.toLocaleDateString('en-US', options)} - ${maxDate.toLocaleDateString('en-US', options)}`;
+  }
+
+  // Progress Bar
+  function updateProgress() {
+    const percent = Math.round((state.currentStep / state.totalSteps) * 100);
+    elements.progressFill.style.width = `${percent}%`;
+    elements.progressStep.textContent = state.currentStep;
+    elements.progressPercent.textContent = `${percent}%`;
+  }
+
+  // Step Navigation
+  function showStep(stepNum) {
+    if (state.isAnimating) return;
+    state.isAnimating = true;
+
+    const currentStepEl = section.querySelector('.mvq-step.is-active');
+    const nextStepEl = section.querySelector(`.mvq-step[data-step="${stepNum}"]`);
+
+    if (currentStepEl) {
+      currentStepEl.classList.add('mvq-step-exit');
+      setTimeout(() => {
+        currentStepEl.classList.remove('is-active', 'mvq-step-exit');
+      }, 400);
+    }
+
+    setTimeout(() => {
+      if (nextStepEl) {
+        nextStepEl.classList.add('is-active');
+      }
+      state.currentStep = stepNum;
+      updateProgress();
+      state.isAnimating = false;
+    }, 400);
+  }
+
+  function showResults() {
+    if (state.isAnimating) return;
+    state.isAnimating = true;
+
+    // Show loading first
+    const currentStepEl = section.querySelector('.mvq-step.is-active');
+    const loadingStepEl = section.querySelector('.mvq-step[data-step="loading"]');
+    
+    if (currentStepEl) {
+      currentStepEl.classList.add('mvq-step-exit');
+      setTimeout(() => {
+        currentStepEl.classList.remove('is-active', 'mvq-step-exit');
+      }, 400);
+    }
+
+    setTimeout(() => {
+      loadingStepEl.classList.add('is-active');
+    }, 400);
+
+    // Calculate and show results after delay
+    setTimeout(() => {
+      calculateRecommendation();
+      loadingStepEl.classList.remove('is-active');
+      elements.results.classList.add('is-active');
+      
+      // Show scroll indicator
+      if (elements.scrollIndicator) {
+        elements.scrollIndicator.style.display = 'flex';
+      }
+      
+      state.isAnimating = false;
+    }, 2000);
+  }
+
+  // Calculation Logic
+  function calculateRecommendation() {
+    const totalDailyUses = state.householdSize * state.usagePerPerson;
+    const daysPerBottle = SERVINGS_PER_BOTTLE / totalDailyUses;
+    const monthsPerBottle = daysPerBottle / 30;
+    
+    // Calculate recommended quantity based on 3-month supply goal
+    let recommendedQty = Math.ceil(3 / monthsPerBottle);
+    recommendedQty = Math.max(1, Math.min(recommendedQty, 12));
+    
+    state.quantity = recommendedQty;
+    
+    updateResultsDisplay();
+  }
+
+  function updateResultsDisplay() {
+    const totalDailyUses = state.householdSize * state.usagePerPerson;
+    const daysPerBottle = SERVINGS_PER_BOTTLE / totalDailyUses;
+    const monthsPerBottle = daysPerBottle / 30;
+    
+    // Calculate values based on current quantity
+    const totalBottles = state.quantity;
+    const totalDays = daysPerBottle * totalBottles;
+    const totalMonths = monthsPerBottle * totalBottles;
+    const totalCost = PRODUCT_PRICE * totalBottles;
+    const costPerDay = totalCost / totalDays;
+    
+    // Update display
+    elements.dailyUses.textContent = totalDailyUses;
+    elements.bottleDuration.textContent = monthsPerBottle.toFixed(1);
+    elements.recommendedQty.textContent = `${totalBottles} bottle${totalBottles > 1 ? 's' : ''}`;
+    elements.totalPrice.textContent = formatCurrency(totalCost);
+    elements.pricePerDay.textContent = formatCurrency(costPerDay);
+    elements.deliveryDate.textContent = getDeliveryDateRange();
+    elements.quantityInput.value = state.quantity;
+    
+    // Update form
+    if (elements.formQuantity) {
+      elements.formQuantity.value = state.quantity;
+    }
+    
+    // Update quantity buttons
+    if (elements.qtyMinus) {
+      elements.qtyMinus.disabled = state.quantity <= 1;
+    }
+    if (elements.qtyPlus) {
+      elements.qtyPlus.disabled = state.quantity >= 12;
+    }
+  }
+
+  // Option Selection Handlers
+  function handleGoalSelect(e) {
+    const option = e.currentTarget;
+    const goal = option.dataset.goal;
+    
+    option.classList.toggle('is-selected');
+    option.setAttribute('aria-pressed', option.classList.contains('is-selected'));
+    
+    if (option.classList.contains('is-selected')) {
+      if (!state.selectedGoals.includes(goal)) {
+        state.selectedGoals.push(goal);
+      }
+    } else {
+      state.selectedGoals = state.selectedGoals.filter(g => g !== goal);
+    }
+    
+    updateNextButton(1);
+  }
+
+  function handleHouseholdSelect(e) {
+    const option = e.currentTarget;
+    const household = parseInt(option.dataset.household);
+    
+    elements.householdOptions.forEach(opt => {
+      opt.classList.remove('is-selected');
+      opt.setAttribute('aria-pressed', 'false');
+    });
+    
+    option.classList.add('is-selected');
+    option.setAttribute('aria-pressed', 'true');
+    state.householdSize = household;
+    
+    updateNextButton(2);
+  }
+
+  function handleUsageSelect(e) {
+    const option = e.currentTarget;
+    const usage = parseInt(option.dataset.usage);
+    
+    elements.usageOptions.forEach(opt => {
+      opt.classList.remove('is-selected');
+      opt.setAttribute('aria-pressed', 'false');
+    });
+    
+    option.classList.add('is-selected');
+    option.setAttribute('aria-pressed', 'true');
+    state.usagePerPerson = usage;
+    
+    updateResultsButton();
+  }
+
+  function updateNextButton(step) {
+    const stepEl = section.querySelector(`.mvq-step[data-step="${step}"]`);
+    const nextBtn = stepEl?.querySelector('.mvq-next-btn');
+    
+    if (!nextBtn) return;
+    
+    if (step === 1) {
+      nextBtn.disabled = state.selectedGoals.length === 0;
+    } else if (step === 2) {
+      nextBtn.disabled = state.householdSize === 0;
+    }
+  }
+
+  function updateResultsButton() {
+    if (elements.resultsBtn) {
+      elements.resultsBtn.disabled = state.usagePerPerson === 0;
+    }
+  }
+
+  // Quantity Controls
+  function handleQuantityChange(delta) {
+    const newQty = Math.max(1, Math.min(12, state.quantity + delta));
+    if (newQty !== state.quantity) {
+      state.quantity = newQty;
+      updateResultsDisplay();
+    }
+  }
+
+  function handleQuantityInput(e) {
+    let value = parseInt(e.target.value) || 1;
+    value = Math.max(1, Math.min(12, value));
+    state.quantity = value;
+    updateResultsDisplay();
+  }
+
+  // Scroll Behavior for Full-Screen Toggle
+  function handleScroll() {
+    const rect = section.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    
+    // If user has scrolled past the section
+    if (rect.bottom < viewportHeight * 0.3) {
+      section.classList.add('is-collapsed');
+    } else if (rect.top > -viewportHeight * 0.5) {
+      section.classList.remove('is-collapsed');
+    }
+  }
+
+  // Variant Selection
+  function handleVariantChange(e) {
+    const selectedVariant = e.target.value;
+    if (elements.variantId) {
+      elements.variantId.value = selectedVariant;
+    }
+  }
+
+  // Event Listeners
+  function initEventListeners() {
+    // Goal options
+    elements.goalOptions.forEach(option => {
+      option.addEventListener('click', handleGoalSelect);
+    });
+
+    // Household options
+    elements.householdOptions.forEach(option => {
+      option.addEventListener('click', handleHouseholdSelect);
+    });
+
+    // Usage options
+    elements.usageOptions.forEach(option => {
+      option.addEventListener('click', handleUsageSelect);
+    });
+
+    // Navigation buttons
+    elements.nextBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        showStep(state.currentStep + 1);
+      });
+    });
+
+    elements.prevBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        showStep(state.currentStep - 1);
+      });
+    });
+
+    if (elements.resultsBtn) {
+      elements.resultsBtn.addEventListener('click', showResults);
+    }
+
+    // Quantity controls
+    if (elements.qtyMinus) {
+      elements.qtyMinus.addEventListener('click', () => handleQuantityChange(-1));
+    }
+    if (elements.qtyPlus) {
+      elements.qtyPlus.addEventListener('click', () => handleQuantityChange(1));
+    }
+    if (elements.quantityInput) {
+      elements.quantityInput.addEventListener('change', handleQuantityInput);
+      elements.quantityInput.addEventListener('input', handleQuantityInput);
+    }
+
+    // Variant selection
+    if (elements.variantSelect) {
+      elements.variantSelect.addEventListener('change', handleVariantChange);
+    }
+
+    // Scroll behavior
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      if (scrollTimeout) {
+        window.cancelAnimationFrame(scrollTimeout);
+      }
+      scrollTimeout = window.requestAnimationFrame(handleScroll);
+    }, { passive: true });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.classList.contains('mvq-option')) {
+        e.target.click();
+      }
+    });
+  }
+
+  // Initialize
+  function init() {
+    initEventListeners();
+    updateProgress();
+    
+    // Set initial delivery date
+    if (elements.deliveryDate) {
+      elements.deliveryDate.textContent = getDeliveryDateRange();
+    }
+  }
+
+  // Start when DOM is ready
